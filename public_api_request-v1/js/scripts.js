@@ -155,7 +155,7 @@ function createSearch() {
       <input type="search" id="search-input" class="search-input" placeholder="Search...">
       <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
   </form>`;
-  searchContainer.innerHTML = form;
+  searchContainer.insertAdjacentHTML('beforeend', form);
 
 
   document.querySelector('form').addEventListener('submit', e => {
@@ -164,11 +164,11 @@ function createSearch() {
     e.target[0].value = '';
   });
 
-  // document.querySelector('form').addEventListener('keyup', e => {
-  //   e.preventDefault();
-  //   search(e.target[0].value);
-  //   e.target[0].value = '';
-  // });
+  document.querySelector('#search-input').addEventListener('change', e => {
+    e.preventDefault();
+    search(e.target.value);
+    e.target.value = '';
+  });
 };
 createSearch();
 
