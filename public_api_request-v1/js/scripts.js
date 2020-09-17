@@ -35,11 +35,14 @@ const writeHTML = (employeeData) => {
               </div>
           </div>`;
     //why does my call to the clickListener function have to be here?  Trying it after the return or join causes errors
-    clickListener(employee, employeeData, index);
+    // clickListener(employee, employeeData, index);
     return html;
     //use .join to eliminate commas.
   }).join('');
-  galleryDiv.insertAdjacentHTML('beforeend',employees)
+  galleryDiv.insertAdjacentHTML('beforeend',employees);
+  employeeData.map((employee, index) => {
+    clickListener(employee, index)
+  })
 }
 
 //create modal window
@@ -114,6 +117,7 @@ const nextEmployee = (json, index) => {
     document.getElementById('modal-next').disabled = false;
   } else {
     //change css styles here to blur button
+    //add/remove class name
     document.getElementById('modal-next').style.display = 'none';
   }
 }
@@ -133,10 +137,8 @@ const prevEmployee = (json, index) => {
 //click event listener to display modal createModalWindow
 //!!!!Could I use something other than setTimeout here?  shouldn't need to be asynchronous
 function clickListener(employee, json, index) {
-  setTimeout(event => {
     const modalWindow = document.getElementById(`${employee.name.first}${employee.name.last}`);
     modalWindow.addEventListener('click', e => createModalWindow(employee, json, index));
-  },1)
 }
 
 //Format the DOB
@@ -161,13 +163,12 @@ function createSearch() {
   document.querySelector('form').addEventListener('submit', e => {
     e.preventDefault();
     search(e.target[0].value);
-    e.target[0].value = '';
+    console.log(e.target);
   });
 
-  document.querySelector('#search-input').addEventListener('change', e => {
-    e.preventDefault();
+  document.querySelector('#search-input').addEventListener('input', e => {
     search(e.target.value);
-    e.target.value = '';
+    console.log(e.target);
   });
 };
 createSearch();
