@@ -35,7 +35,6 @@ const writeHTML = (employeeData) => {
               </div>
           </div>`;
     return html;
-    //use .join to eliminate commas.
   }).join('');
   galleryDiv.insertAdjacentHTML('beforeend',employees);
   employeeData.map((employee, index) => {
@@ -48,6 +47,7 @@ function clickListener(employee, employeeData, index) {
     const modalWindow = document.getElementById(`${employee.name.first}${employee.name.last}`);
     modalWindow.addEventListener('click', e => createModalWindow(employee, employeeData, index));
 }
+
 //Format the DOB
 const formatBday = (dob) => {
   let bday = new Date (dob);
@@ -87,22 +87,9 @@ function createModalWindow(employee, employeeData, index) {
 
     modalDiv.insertAdjacentHTML('beforeend', modalHTML);
     document.querySelector('body').appendChild(modalDiv);
+    console.log(modalDiv);
 
-  //prevent//grey out button if selecting someone from the ends of the array
 
-  // if(index > 0 || index < 11) {
-  //   modalDiv.insertAdjacentHTML('beforeend', modalHTML);
-  //   document.querySelector('body').appendChild(modalDiv);
-  // } else if (index = 0){
-  //     document.getElementById('modal-prev').remove();
-  //     modalDiv.insertAdjacentHTML('beforeend', modalHTML);
-  //     document.querySelector('body').appendChild(modalDiv);
-  //
-  // } else if (index = 11) {
-  //     modalDiv.insertAdjacentHTML('beforeend', modalHTML);
-  //     document.querySelector('body').appendChild(modalDiv);
-  //     document.getElementById('modal-next').remove();
-  // }
 
   //Add event listener for close button
   const closeButton = document.getElementById('modal-close-btn');
@@ -110,12 +97,15 @@ function createModalWindow(employee, employeeData, index) {
       modalDiv.remove();
     })
 
+
+
+
   //Add event listener for next button
   const nextButton = document.getElementById('modal-next').addEventListener('click', e => {
     if(index < 11){
       modalDiv.remove();
       nextEmployee(employeeData, index)
-    }else if (index === 11){
+    }else if (index < 11){
       modalDiv.remove();
       nextEmployee(employeeData, index)
       document.getElementById('modal-next').disabled = true;
@@ -123,12 +113,13 @@ function createModalWindow(employee, employeeData, index) {
     }
   })
 
+
   //Add event listener for previous button
   const prevButton = document.getElementById('modal-prev').addEventListener('click', e => {
-    if(index >= 0){
+    if(index > 0){
         modalDiv.remove();
         prevEmployee(employeeData, index)
-    }else if (index === 0){
+    }else if (index < 0){
         modalDiv.remove();
         prevEmployee(employeeData, index)
         document.getElementById('modal-prev').disabled = true;
@@ -137,16 +128,20 @@ function createModalWindow(employee, employeeData, index) {
   })
 }
 
+
+
+
+
 //Next button
 const nextEmployee = (employeeData, index) => {
   let employee = employeeData[index += 1];
   createModalWindow(employee, employeeData, index);
-  if (index < 11){
-    document.getElementById('modal-next').disabled = false;
+  if (index >= 11){
+    document.getElementById('modal-next').style.display = 'none';
   } else {
     //change css styles here to blur button
     //add/remove class name
-    document.getElementById('modal-next').style.display = 'none';
+    document.getElementById('modal-next').disabled = false;
   }
 }
 
@@ -154,13 +149,21 @@ const nextEmployee = (employeeData, index) => {
 const prevEmployee = (employeeData, index) => {
   let employee = employeeData[index -= 1];
   createModalWindow(employee, employeeData, index);
-  if (index > 0){
-    document.getElementById('modal-prev').disabled = false;
+  if (index <= 0){
+    document.getElementById('modal-prev').style.display = 'none';
+
   } else {
     //change css styles here to blur button
-    document.getElementById('modal-prev').style.display = 'none';
+    document.getElementById('modal-prev').disabled = false;
+
   }
 }
+
+
+
+
+
+
 
 
 //Create and Append the Search Function
