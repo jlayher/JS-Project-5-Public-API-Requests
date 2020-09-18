@@ -34,21 +34,32 @@ const writeHTML = (employeeData) => {
                   <p class="card-text cap">${employee.location.city}, ${employee.location.state}</p>
               </div>
           </div>`;
-    //why does my call to the clickListener function have to be here?  Trying it after the return or join causes errors
-    // clickListener(employee, employeeData, index);
     return html;
     //use .join to eliminate commas.
   }).join('');
   galleryDiv.insertAdjacentHTML('beforeend',employees);
   employeeData.map((employee, index) => {
-    clickListener(employee, index)
+    clickListener(employee, employeeData, index)
   })
 }
 
-//create modal window
-//!!!!Issues:  Need DOB formatted.  Why Does location.street require .number and .name?  This doesn't show up on the API page
+//click event listener to display modal window
+function clickListener(employee, employeeData, index) {
+    const modalWindow = document.getElementById(`${employee.name.first}${employee.name.last}`);
+    modalWindow.addEventListener('click', e => createModalWindow(employee, employeeData, index));
+}
+//Format the DOB
+const formatBday = (dob) => {
+  let bday = new Date (dob);
+  let month = bday.getMonth();
+  let day = bday.getDate();
+  let year = bday.getFullYear();
+  return month + '/' + day + '/' + year;
+}
 
-function createModalWindow(employee, json, index) {
+//create modal window
+
+function createModalWindow(employee, employeeData, index) {
   const modalDiv = document.createElement('div');
   modalDiv.className = 'modal-container';
   const dob = formatBday(employee.dob.date);
@@ -73,8 +84,25 @@ function createModalWindow(employee, json, index) {
             <button type="button" id="modal-next" class="modal-next btn">Next</button>
         </div>
     </div>`
-  modalDiv.insertAdjacentHTML('beforeend', modalHTML);
-  document.querySelector('body').appendChild(modalDiv);
+
+    modalDiv.insertAdjacentHTML('beforeend', modalHTML);
+    document.querySelector('body').appendChild(modalDiv);
+
+  //prevent//grey out button if selecting someone from the ends of the array
+
+  // if(index > 0 || index < 11) {
+  //   modalDiv.insertAdjacentHTML('beforeend', modalHTML);
+  //   document.querySelector('body').appendChild(modalDiv);
+  // } else if (index = 0){
+  //     document.getElementById('modal-prev').remove();
+  //     modalDiv.insertAdjacentHTML('beforeend', modalHTML);
+  //     document.querySelector('body').appendChild(modalDiv);
+  //
+  // } else if (index = 11) {
+  //     modalDiv.insertAdjacentHTML('beforeend', modalHTML);
+  //     document.querySelector('body').appendChild(modalDiv);
+  //     document.getElementById('modal-next').remove();
+  // }
 
   //Add event listener for close button
   const closeButton = document.getElementById('modal-close-btn');
@@ -86,10 +114,10 @@ function createModalWindow(employee, json, index) {
   const nextButton = document.getElementById('modal-next').addEventListener('click', e => {
     if(index < 11){
       modalDiv.remove();
-      nextEmployee(json, index)
+      nextEmployee(employeeData, index)
     }else if (index === 11){
       modalDiv.remove();
-      nextEmployee(json, index)
+      nextEmployee(employeeData, index)
       document.getElementById('modal-next').disabled = true;
       document.getElementById('modal-next').style.display = 'none';
     }
@@ -99,10 +127,10 @@ function createModalWindow(employee, json, index) {
   const prevButton = document.getElementById('modal-prev').addEventListener('click', e => {
     if(index >= 0){
         modalDiv.remove();
-        prevEmployee(json, index)
+        prevEmployee(employeeData, index)
     }else if (index === 0){
         modalDiv.remove();
-        prevEmployee(json, index)
+        prevEmployee(employeeData, index)
         document.getElementById('modal-prev').disabled = true;
         document.getElementById('modal-prev').style.display = 'none';
       }
@@ -110,9 +138,9 @@ function createModalWindow(employee, json, index) {
 }
 
 //Next button
-const nextEmployee = (json, index) => {
-  let employee = json[index += 1];
-  createModalWindow(employee, json, index);
+const nextEmployee = (employeeData, index) => {
+  let employee = employeeData[index += 1];
+  createModalWindow(employee, employeeData, index);
   if (index < 11){
     document.getElementById('modal-next').disabled = false;
   } else {
@@ -123,9 +151,9 @@ const nextEmployee = (json, index) => {
 }
 
 //Previous button
-const prevEmployee = (json, index) => {
-  let employee = json[index -= 1];
-  createModalWindow(employee, json, index);
+const prevEmployee = (employeeData, index) => {
+  let employee = employeeData[index -= 1];
+  createModalWindow(employee, employeeData, index);
   if (index > 0){
     document.getElementById('modal-prev').disabled = false;
   } else {
@@ -134,21 +162,6 @@ const prevEmployee = (json, index) => {
   }
 }
 
-//click event listener to display modal createModalWindow
-//!!!!Could I use something other than setTimeout here?  shouldn't need to be asynchronous
-function clickListener(employee, json, index) {
-    const modalWindow = document.getElementById(`${employee.name.first}${employee.name.last}`);
-    modalWindow.addEventListener('click', e => createModalWindow(employee, json, index));
-}
-
-//Format the DOB
-const formatBday = (dob) => {
-  let bday = new Date (dob);
-  let month = bday.getMonth();
-  let day = bday.getDate();
-  let year = bday.getFullYear();
-  return month + '/' + day + '/' + year;
-}
 
 //Create and Append the Search Function
 function createSearch() {
@@ -187,13 +200,6 @@ function search(input) {
     }
   }
 }
-
-
-
-
-
-
-
 
 
 
