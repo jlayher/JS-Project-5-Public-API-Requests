@@ -84,12 +84,22 @@ function createModalWindow(employee, employeeData, index) {
             <button type="button" id="modal-next" class="modal-next btn">Next</button>
         </div>
     </div>`
-
+    if(index === 11){
+      modalDiv.remove();
+      nextEmployee(employeeData, index)
+      document.getElementById('modal-next').disabled = true;
+      document.getElementById('modal-next').style.display = 'none';
+    }else if(index === 0){
+      modalDiv.remove();
+      prevEmployee(employeeData, index)
+      document.getElementById('modal-prev').disabled = true;
+      document.getElementById('modal-prev').style.display = 'none';
+    } else {
     modalDiv.insertAdjacentHTML('beforeend', modalHTML);
     document.querySelector('body').appendChild(modalDiv);
     console.log(modalDiv);
-
-
+    }
+  }
 
   //Add event listener for close button
   const closeButton = document.getElementById('modal-close-btn');
@@ -105,29 +115,29 @@ function createModalWindow(employee, employeeData, index) {
     if(index < 11){
       modalDiv.remove();
       nextEmployee(employeeData, index)
-    }else if (index < 11){
-      modalDiv.remove();
-      nextEmployee(employeeData, index)
-      document.getElementById('modal-next').disabled = true;
-      document.getElementById('modal-next').style.display = 'none';
-    }
-  })
-
+    // }else if (index < 11){
+    //   modalDiv.remove();
+    //   nextEmployee(employeeData, index)
+    //   document.getElementById('modal-next').disabled = true;
+    //   document.getElementById('modal-next').style.display = 'none';
+    // }
+  //})
+}})
 
   //Add event listener for previous button
   const prevButton = document.getElementById('modal-prev').addEventListener('click', e => {
     if(index > 0){
         modalDiv.remove();
         prevEmployee(employeeData, index)
-    }else if (index < 0){
-        modalDiv.remove();
-        prevEmployee(employeeData, index)
-        document.getElementById('modal-prev').disabled = true;
-        document.getElementById('modal-prev').style.display = 'none';
-      }
-  })
-}
-
+    // }else if (index < 0){
+    //     modalDiv.remove();
+    //     prevEmployee(employeeData, index)
+    //     document.getElementById('modal-prev').disabled = true;
+    //     document.getElementById('modal-prev').style.display = 'none';
+    //   }
+  //})
+  }
+})
 
 
 
